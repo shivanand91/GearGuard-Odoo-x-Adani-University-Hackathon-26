@@ -12,15 +12,22 @@ const Dashboard = () => {
 
   useEffect(() => {
     const loadStats = async () => {
-      const equipments = await getAllEquipment();
-      const requests = await getAllRequests();
+      try {
+        const equipmentData = await getAllEquipment();
+        const requestData = await getAllRequests();
 
-      setStats({
-        equipment: equipments.length,
-        requests: requests.length,
-        pending: requests.filter(r => r.status === "New").length,
-        completed: requests.filter(r => r.status === "Repaired").length
-      });
+        const equipmentList = equipmentData?.data || [];
+        const requestList = requestData?.data || [];
+
+        setStats({
+          equipment: equipmentList.length,
+          requests: requestList.length,
+          pending: requestList.filter(r => r.status === "New").length,
+          completed: requestList.filter(r => r.status === "Repaired").length
+        });
+      } catch (err) {
+        console.error("Failed to load stats:", err);
+      }
     };
 
     loadStats();

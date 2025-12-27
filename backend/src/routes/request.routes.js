@@ -16,6 +16,11 @@ import { protect } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
+// Filtering routes (must come BEFORE /:id route)
+router.get("/team/:teamId", protect, getRequestsByTeam);
+router.get("/preventive/calendar", protect, getPreventiveRequests);
+router.get("/analytics/dashboard", protect, getRequestAnalytics);
+
 // CRUD operations
 router.post("/", protect, createRequest);
 router.get("/", protect, getAllRequests);
@@ -26,12 +31,5 @@ router.delete("/:id", protect, deleteRequest);
 // Action routes
 router.put("/:id/assign", protect, assignRequest);
 router.put("/:id/status", protect, changeStatus);
-
-// Filtering routes
-router.get("/team/:teamId", protect, getRequestsByTeam);
-router.get("/preventive/calendar", protect, getPreventiveRequests);
-
-// Analytics/Reports
-router.get("/analytics/dashboard", protect, getRequestAnalytics);
 
 export default router;

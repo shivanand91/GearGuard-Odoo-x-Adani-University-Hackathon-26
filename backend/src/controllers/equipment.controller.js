@@ -80,18 +80,21 @@ export const createEquipment = async (req, res) => {
       return res.status(400).json({ message: "Equipment with this serial number already exists" });
     }
 
-    const equipment = await Equipment.create({
+    // Convert empty strings to null for ObjectId fields
+    const data = {
       name,
       serialNumber,
       category,
       location,
       department,
-      assignedTeam,
-      assignedTo,
+      assignedTeam: assignedTeam ? assignedTeam : null,
+      assignedTo: assignedTo ? assignedTo : null,
       purchaseDate,
       warranty,
       status: "Active"
-    });
+    };
+
+    const equipment = await Equipment.create(data);
 
     const populatedEquipment = await equipment.populate("assignedTeam", "name").populate("assignedTo", "name email");
 
@@ -109,7 +112,11 @@ export const createEquipment = async (req, res) => {
 export const updateEquipment = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    
+    // Convert empty strings to null for ObjectId fields
+    const updateData = { ...req.body };
+    if (updateData.assignedTeam === "") updateData.assignedTeam = null;
+    if (updateData.assignedTo === "") updateData.assignedTo = null;
 
     const equipment = await Equipment.findByIdAndUpdate(id, updateData, {
       new: true,

@@ -141,7 +141,21 @@ export const deleteTeam = async (req, res) => {
 export const addTeamMember = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.body;
+    let { userId } = req.body;
+
+    // Validate userId/email is provided
+    if (!userId) {
+      return res.status(400).json({ message: "User ID or Email is required" });
+    }
+
+    // If userId looks like an email, find user by email
+    if (userId.includes("@")) {
+      const user = await User.findOne({ email: userId.toLowerCase() });
+      if (!user) {
+        return res.status(404).json({ message: "User not found with this email" });
+      }
+      userId = user._id;
+    }
 
     // Verify user exists
     const user = await User.findById(userId);
@@ -154,8 +168,11 @@ export const addTeamMember = async (req, res) => {
       return res.status(404).json({ message: "Team not found" });
     }
 
-    // Check if user already in team
-    if (team.members.includes(userId)) {
+    // Check if user already in team (convert to string for comparison)
+    const userIdString = userId.toString();
+    const memberExists = team.members.some(memberId => memberId.toString() === userIdString);
+    
+    if (memberExists) {
       return res.status(400).json({ message: "User already in team" });
     }
 

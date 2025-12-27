@@ -6,6 +6,7 @@ export const getTeams = async (params = {}) => {
     const res = await api.get("/team", { params });
     return res.data;
   } catch (error) {
+    console.error("getTeams error:", error.response?.data || error.message);
     throw error;
   }
 };
@@ -66,6 +67,7 @@ export const addTeamMember = async (id, userId) => {
     const res = await api.post(`/team/${id}/members`, { userId });
     return res.data;
   } catch (error) {
+    console.error("addTeamMember error:", error.response?.data || error.message);
     throw error;
   }
 };

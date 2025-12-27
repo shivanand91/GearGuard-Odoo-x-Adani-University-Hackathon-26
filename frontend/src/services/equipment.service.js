@@ -6,6 +6,7 @@ export const getAllEquipment = async (params = {}) => {
     const res = await api.get("/equipment", { params });
     return res.data;
   } catch (error) {
+    console.error("getAllEquipment error:", error.response?.data || error.message);
     throw error;
   }
 };
@@ -23,7 +24,11 @@ export const getEquipmentById = async (id) => {
 // CREATE equipment
 export const createEquipment = async (data) => {
   try {
-    const res = await api.post("/equipment", data);
+    // Convert empty strings to null for optional ObjectId fields
+    const cleanData = { ...data };
+    if (!cleanData.assignedTeam) cleanData.assignedTeam = null;
+    if (!cleanData.assignedTo) cleanData.assignedTo = null;
+    const res = await api.post("/equipment", cleanData);
     return res.data;
   } catch (error) {
     throw error;
@@ -33,7 +38,11 @@ export const createEquipment = async (data) => {
 // UPDATE equipment
 export const updateEquipment = async (id, data) => {
   try {
-    const res = await api.put(`/equipment/${id}`, data);
+    // Convert empty strings to null for optional ObjectId fields
+    const cleanData = { ...data };
+    if (!cleanData.assignedTeam) cleanData.assignedTeam = null;
+    if (!cleanData.assignedTo) cleanData.assignedTo = null;
+    const res = await api.put(`/equipment/${id}`, cleanData);
     return res.data;
   } catch (error) {
     throw error;
@@ -89,4 +98,4 @@ export const markEquipmentAsScrap = async (id, notes = "") => {
     throw error;
   }
 };
-};
+

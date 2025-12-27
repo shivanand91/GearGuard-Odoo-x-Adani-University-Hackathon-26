@@ -72,7 +72,7 @@ const Requests = () => {
     try {
       await createRequest({
         ...formData,
-        createdBy: user.id
+        createdBy: user.id || user._id
       });
       resetForm();
       fetchRequests();
@@ -117,7 +117,7 @@ const Requests = () => {
 
   const handleAssign = async (requestId) => {
     try {
-      await assignRequest(requestId, user.id);
+      await assignRequest(requestId, user.id || user._id);
       fetchRequests();
     } catch (err) {
       setError("Failed to assign request");

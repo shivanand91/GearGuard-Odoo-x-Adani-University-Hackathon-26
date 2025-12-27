@@ -44,9 +44,12 @@ const Equipment = () => {
       if (filterDepartment) params.department = filterDepartment;
 
       const data = await getAllEquipment(params);
-      setEquipment(data.data || []);
+      console.log("Equipment response:", data);
+      setEquipment(data?.data || []);
+      setError("");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch equipment");
+      console.error("Fetch equipment error:", err);
+      setError(err.response?.data?.message || err.message || "Failed to fetch equipment");
     } finally {
       setLoading(false);
     }
@@ -55,9 +58,10 @@ const Equipment = () => {
   const fetchTeams = async () => {
     try {
       const data = await getTeams();
-      setTeams(data.data || []);
+      console.log("Teams response:", data);
+      setTeams(data?.data || []);
     } catch (err) {
-      console.error("Failed to fetch teams");
+      console.error("Failed to fetch teams:", err);
     }
   };
 

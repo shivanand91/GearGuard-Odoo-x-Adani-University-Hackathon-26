@@ -12,7 +12,13 @@ import { useAuth } from "../hooks/useAuth";
 
 
 const PrivateRoute = ({ children }) => {
-  const { user } = useAuth();
+  const { user, isInitialized } = useAuth();
+
+  // اگر ابھی initialize نہیں ہوا تو loading دکھاؤ
+  if (!isInitialized) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+
   return user ? children : <Navigate to="/login" />;
 };
 
