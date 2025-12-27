@@ -1,1 +1,1 @@
-# GearGuard---Odoo-x-Adani-University-Hackathon-26
+# GearGuard: Odoo X Adani University Hackathon-26
