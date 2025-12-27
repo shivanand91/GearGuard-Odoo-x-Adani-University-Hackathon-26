@@ -2,12 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
-import { loginUser } from "../../services/auth.service";
 import { useAuth } from "../../hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const { login } = useAuth();
 
   const [form, setForm] = useState({
     email: "",
@@ -27,12 +26,11 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await loginUser(form);
-      localStorage.setItem("token", res.token);
-      setUser(res.user);
+      await login(form);
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      const errorMsg = err.response?.data?.message || err.message || "Login failed";
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
